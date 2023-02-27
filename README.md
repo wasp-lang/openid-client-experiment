@@ -11,12 +11,14 @@ There are three pieces of code:
 
 Make sure to build and link `@wasp-lang/auth` package:
 ```bash
+cd packages/wasp-auth
 npm run build
 npm link
 ```
 
 Install the local package in `api` with:
 ```bash
+cd api
 npm link @wasp-lang/auth
 ```
 
@@ -27,5 +29,6 @@ npm run dev
 
 Run the `frontend` with:
 ```bash
+cd frontend
 npm run dev
 ```
