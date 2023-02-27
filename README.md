@@ -7,7 +7,9 @@ There are three pieces of code:
 - `api` that uses `createOAuthRouter` and provides a simple API that can be used to login and get the current user
 - `frontend` that uses `api` to login and gets the current user
 
-### Running it locally
+## Running it locally
+
+### @wasp-lang/auth
 
 Make sure to build and link `@wasp-lang/auth` package:
 ```bash
@@ -16,17 +18,22 @@ npm run build
 npm link
 ```
 
+### API
+
 Install the local package in `api` with:
 ```bash
 cd api
 npm link @wasp-lang/auth
 ```
 
+Copy `env.example` to `.env` and fill in the values.
+
 Run the `api` with:
 ```bash
 npm run dev
 ```
 
+### Frontend
 Run the `frontend` with:
 ```bash
 cd frontend
