@@ -1,16 +1,26 @@
 import { useState, useEffect } from "react";
 import waspLogo from "./assets/wasp.svg";
 import "./App.css";
-import { getUser } from "./api/auth";
+import { getUser, getProviders } from "./api/auth";
 import { deleteToken } from "./auth";
 import { JsonViewer } from "@textea/json-viewer";
 
 type User = Awaited<ReturnType<typeof getUser>>;
+type Providers = Awaited<ReturnType<typeof getProviders>>;
 
 function App() {
+    const [providers, setProviders] = useState<Providers>([]);
     const [user, setUser] = useState<User | null>(null);
+    const disabledProviders = ["facebook", "twitter", "apple", "linkedin"];
 
     useEffect(() => {
+        getProviders()
+            .then((providers) => {
+                setProviders(providers);
+            })
+            .catch((e) => {
+                // console.log("Error while getting providers:", e);
+            });
         getUser()
             .then((user) => {
                 setUser(user);
@@ -50,31 +60,27 @@ function App() {
                     />
                 )}
             </div>
-            <div style={{ display: "flex", gap: "1rem" }}>
-                <a
-                    className="button"
-                    href="http://localhost:3001/auth/google/login"
-                >
-                    Login with Google
-                </a>
-                <a
-                    className="button"
-                    href="http://localhost:3001/auth/github/login"
-                >
-                    Login with GitHub
-                </a>
-                <a
-                    className="button disabled"
-                    href="http://localhost:3001/auth/facebook/login"
-                >
-                    Login with Facebook
-                </a>
-                <a
-                    className="button"
-                    href="http://localhost:3001/auth/microsoft/login"
-                >
-                    Login with Microsoft
-                </a>
+            <div
+                style={{
+                    display: "flex",
+                    gap: "1rem",
+                    maxWidth: "50vw",
+                    flexWrap: "wrap"
+                }}
+            >
+                {providers.map((provider) => (
+                    <a
+                        key={provider.slug}
+                        className={`button${
+                            disabledProviders.includes(provider.slug)
+                                ? " disabled"
+                                : ""
+                        }`}
+                        href={`http://localhost:3001/auth/${provider.slug}/login`}
+                    >
+                        Login with {provider.name}
+                    </a>
+                ))}
             </div>
         </div>
     );

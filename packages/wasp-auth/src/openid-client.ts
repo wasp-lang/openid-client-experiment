@@ -21,7 +21,8 @@ export async function createClient(
             issuer: providerSlug,
             authorization_endpoint: provider.authorizeUrl,
             token_endpoint: provider.accessUrl,
-            userinfo_endpoint: provider.profileUrl
+            userinfo_endpoint: provider.profileUrl,
+            ...(provider.aditionalIssuerMetadata ?? {})
         });
     } else {
         issuer = await Issuer.discover(provider.issuer);
@@ -31,7 +32,8 @@ export async function createClient(
         client_id: provider.clientId,
         client_secret: provider.clientSecret,
         redirect_uris: [provider.redirectUrl],
-        response_types: ["code"]
+        response_types: ["code"],
+        ...(provider.additionalClientParams ?? {})
     });
 }
 

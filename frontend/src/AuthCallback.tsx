@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { useLocation, useParams, useNavigate } from "react-router-dom";
+import { useLocation, useParams, useNavigate, Link } from "react-router-dom";
 import { finishOAuthLogin } from "./api/auth";
 import { setToken } from "./auth";
 
@@ -15,7 +15,9 @@ function AuthCallback() {
 
     useEffect(() => {
         if (provider && code && state) {
-            exchangeCodeForToken(provider, code, state)
+            // Convert URLSearchParams to object
+            const params = Object.fromEntries(query.entries());
+            exchangeCodeForToken(provider, params)
                 .then(() => navigate("/"))
                 .catch((error) => setError(new Error(error.message)));
         }
@@ -26,7 +28,10 @@ function AuthCallback() {
             {error ? (
                 <div>
                     <h1>Something went wrong</h1>
-                    <p>{error.message}</p>
+                    <p style={{ marginBottom: "2rem" }}>{error.message}</p>
+                    <Link to="/" className="button">
+                        Go Back
+                    </Link>
                 </div>
             ) : (
                 <div>
@@ -39,10 +44,9 @@ function AuthCallback() {
 
 async function exchangeCodeForToken(
     provider: string,
-    code: string,
-    state: string | null
+    params: { [key: string]: string }
 ) {
-    const response = await finishOAuthLogin(provider, { code, state });
+    const response = await finishOAuthLogin(provider, params);
     setToken(response.token);
 }
 

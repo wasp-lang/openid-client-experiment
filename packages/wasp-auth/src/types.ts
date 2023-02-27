@@ -12,6 +12,7 @@ export type ProviderOAuth2 = {
     accessUrl: string;
     profileUrl: string;
     redirectUrl: string;
+    aditionalIssuerMetadata?: Record<string, any>;
 } & ProviderCommon;
 
 type ProviderCommon = {
@@ -19,4 +20,6 @@ type ProviderCommon = {
     clientId?: string;
     clientSecret?: string;
     redirectUrl: string;
+    scope?: string;
+    additionalClientParams?: Record<string, any>;
 };

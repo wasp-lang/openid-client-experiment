@@ -39,7 +39,7 @@ export function createOAuthRouter<User>({
         try {
             const client = await createClient(providerSlug, provider);
             const authUrl = client.authorizationUrl({
-                scope: "openid email profile",
+                scope: provider.scope ?? "openid email profile",
                 access_type: "offline",
                 code_challenge: codeChallenge,
                 code_challenge_method: "S256",
@@ -89,6 +89,18 @@ export function createOAuthRouter<User>({
             console.warn(e);
             res.status(400).json({ error: e.message });
         }
+    });
+
+    router.get("/providers", (req: Request, res: Response) => {
+        const providerList = Array.from(providers.keys()).map((slug) => {
+            const provider = providers.get(slug)!();
+            return {
+                slug,
+                name: provider.name,
+                type: provider.type
+            };
+        });
+        res.json(providerList);
     });
 
     return router;

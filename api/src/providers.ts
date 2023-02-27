@@ -49,6 +49,46 @@ export function getProviders() {
         clientId: process.env.AUTH_MICROSOFT_CLIENT_ID,
         clientSecret: process.env.AUTH_MICROSOFT_CLIENT_SECRET
     });
+    registerProvider("discord", {
+        type: "oauth2",
+        name: "Discord",
+        authorizeUrl: "https://discord.com/api/oauth2/authorize",
+        accessUrl: "https://discord.com/api/oauth2/token",
+        profileUrl: "https://discord.com/api/users/@me",
+        clientId: process.env.AUTH_DISCORD_CLIENT_ID,
+        clientSecret: process.env.AUTH_DISCORD_CLIENT_SECRET,
+        scope: "identify email"
+    });
+    registerProvider("twitch", {
+        type: "oidc",
+        name: "Twitch",
+        issuer: "https://id.twitch.tv/oauth2/.well-known/openid-configuration",
+        clientId: process.env.AUTH_TWITCH_CLIENT_ID,
+        clientSecret: process.env.AUTH_TWITCH_CLIENT_SECRET,
+        scope: "openid user:read:email"
+    });
+    registerProvider("linkedin", {
+        type: "oauth2",
+        name: "LinkedIn",
+        authorizeUrl: "https://www.linkedin.com/oauth/v2/authorization",
+        accessUrl: "https://www.linkedin.com/oauth/v2/accessToken",
+        profileUrl: "https://api.linkedin.com/v2/me",
+        clientId: process.env.AUTH_LINKEDIN_CLIENT_ID,
+        clientSecret: process.env.AUTH_LINKEDIN_CLIENT_SECRET,
+        scope: "r_liteprofile r_emailaddress",
+        aditionalIssuerMetadata: {
+            token_endpoint_auth_methods_supported: "client_secret_post"
+        }
+    });
+    registerProvider("apple", {
+        type: "oidc",
+        name: "Apple",
+        issuer: "https://appleid.apple.com/.well-known/openid-configuration",
+        clientId: process.env.AUTH_APPLE_CLIENT_ID,
+        clientSecret: process.env.AUTH_APPLE_CLIENT_SECRET,
+        scope: "name email",
+        additionalClientParams: { response_mode: "form_post" }
+    });
 
     return providers;
 
