@@ -55,7 +55,7 @@ app.use(
     createOAuthRouter({
         providers: getProviders(),
         getUser: async (providerSlug, userInfo) => {
-            if (!users.findBy("providerId", userInfo.sub)) {
+            if (!users.findBy("provider", providerSlug)) {
                 users.create({
                     email: userInfo.email!,
                     provider: providerSlug,
@@ -63,7 +63,7 @@ app.use(
                     userInfo
                 });
             }
-            const user = users.findBy("providerId", userInfo.sub)!;
+            const user = users.findBy("provider", providerSlug)!;
             return user;
         },
         makeOnSuccessResponse: (user) => {

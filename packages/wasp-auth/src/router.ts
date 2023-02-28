@@ -135,7 +135,9 @@ async function getUserInfo(
             ...tokenSet,
             ...tokenSet.claims()
         };
+        // Redundant field since we parsed it in claims()
         delete userInfo.id_token;
+
         if (client.issuer.metadata.userinfo_endpoint) {
             const extraUserInfo = await client.userinfo(tokenSet.access_token!);
             userInfo = {
@@ -145,21 +147,29 @@ async function getUserInfo(
         }
         return userInfo;
     } else {
+        const checks: { state: string; code_verifier?: string } = {
+            state: codeChallenge,
+            code_verifier: verifier
+        };
+
+        // Some providers require the code verifier field, while some (Linkedin) fail if it's present
+        if (provider.isCodeVerifierFieldForbidden) {
+            delete checks.code_verifier;
+        }
         const tokenSet = await client.oauthCallback(
             provider.redirectUrl,
             {
                 code,
                 state
             },
-            {
-                code_verifier: verifier,
-                state: codeChallenge
-            }
+            checks
         );
         let userInfo = {
             ...tokenSet
         };
-        // Notion has a required header which we can't send with the userinfo request https://developers.notion.com/reference/get-self
+        // Try to get extra user info, but it might fail
+        // e.g. Notion has a required header which we can't send with the userinfo request due to openid-client
+        // https://developers.notion.com/reference/get-self
         try {
             const extraUserInfo = await client.userinfo(tokenSet.access_token!);
             userInfo = {

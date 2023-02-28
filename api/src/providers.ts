@@ -78,7 +78,8 @@ export function getProviders() {
         scope: "r_liteprofile r_emailaddress",
         aditionalIssuerMetadata: {
             token_endpoint_auth_methods_supported: ["client_secret_post"]
-        }
+        },
+        isCodeVerifierFieldForbidden: true
     });
     registerProvider("apple", {
         type: "oidc",

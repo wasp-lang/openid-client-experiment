@@ -11,7 +11,7 @@ type Providers = Awaited<ReturnType<typeof getProviders>>;
 function App() {
     const [providers, setProviders] = useState<Providers>([]);
     const [user, setUser] = useState<User | null>(null);
-    const disabledProviders = ["facebook", "twitter", "apple", "linkedin"];
+    const disabledProviders = ["facebook", "twitter", "apple"];
 
     useEffect(() => {
         getProviders()
