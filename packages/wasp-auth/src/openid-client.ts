@@ -25,6 +25,11 @@ export async function createClient(
             ...(provider.aditionalIssuerMetadata ?? {})
         });
     } else {
+        if (!provider.issuer) {
+            return Promise.reject(
+                new Error(`Missing issuer for provider ${providerSlug}`)
+            );
+        }
         issuer = await Issuer.discover(provider.issuer);
     }
 

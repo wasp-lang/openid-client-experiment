@@ -44,8 +44,7 @@ export function getProviders() {
     registerProvider("microsoft", {
         type: "oidc",
         name: "Microsoft",
-        // Here's the first example of a provider that doesn't have a static issuer URL
-        issuer: "https://login.microsoftonline.com/ad9421ca-887c-4c15-9e8a-87fe9dc4f96b/v2.0/.well-known/openid-configuration",
+        issuer: process.env.AUTH_MICROSOFT_ISSUER_URL,
         clientId: process.env.AUTH_MICROSOFT_CLIENT_ID,
         clientSecret: process.env.AUTH_MICROSOFT_CLIENT_SECRET
     });
@@ -109,6 +108,24 @@ export function getProviders() {
         clientId: process.env.AUTH_NOTION_CLIENT_ID,
         clientSecret: process.env.AUTH_NOTION_CLIENT_SECRET,
         scope: "basic_read"
+    });
+    registerProvider("slack", {
+        type: "oidc",
+        name: "Slack",
+        issuer: "https://slack.com/.well-known/openid-configuration",
+        clientId: process.env.AUTH_SLACK_CLIENT_ID,
+        clientSecret: process.env.AUTH_SLACK_CLIENT_SECRET,
+        scope: "openid email"
+    });
+    registerProvider("zoom", {
+        type: "oauth2",
+        name: "Zoom",
+        authorizeUrl: "https://zoom.us/oauth/authorize",
+        accessUrl: "https://zoom.us/oauth/token",
+        profileUrl: "https://api.zoom.us/v2/users/me",
+        clientId: process.env.AUTH_ZOOM_CLIENT_ID,
+        clientSecret: process.env.AUTH_ZOOM_CLIENT_SECRET,
+        scope: "user:read"
     });
 
     return providers;

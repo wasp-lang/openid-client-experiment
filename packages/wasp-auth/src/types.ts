@@ -2,7 +2,7 @@ export type Provider = ProviderOIDC | ProviderOAuth2;
 
 export type ProviderOIDC = {
     type: "oidc";
-    issuer: string;
+    issuer?: string;
     redirectUrl: string;
 } & ProviderCommon;
 
