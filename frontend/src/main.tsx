@@ -7,6 +7,10 @@ import App from "./App";
 import AuthCallback from "./AuthCallback";
 import "./index.css";
 
+import { QueryClient, QueryClientProvider } from "react-query";
+
+export const queryClient = new QueryClient();
+
 const router = createBrowserRouter([
     {
         path: "/",
@@ -19,5 +23,7 @@ const router = createBrowserRouter([
 ]);
 
 ReactDOM.createRoot(document.getElementById("root") as HTMLElement).render(
-    <RouterProvider router={router} />
+    <QueryClientProvider client={queryClient}>
+        <RouterProvider router={router} />
+    </QueryClientProvider>
 );

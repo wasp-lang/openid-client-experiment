@@ -1,38 +1,17 @@
-import { useState, useEffect } from "react";
 import waspLogo from "./assets/wasp.svg";
 import "./App.css";
-import { getUser, getProviders } from "./api/auth";
 import { deleteToken } from "./auth";
 import { JsonViewer } from "@textea/json-viewer";
-
-type User = Awaited<ReturnType<typeof getUser>>;
-type Providers = Awaited<ReturnType<typeof getProviders>>;
+import { useUser, removeUser, useProviders } from "./auth/hooks";
 
 function App() {
-    const [providers, setProviders] = useState<Providers>([]);
-    const [user, setUser] = useState<User | null>(null);
+    const { user, isLoading: isUserLoading } = useUser();
+    const { providers, isLoading: areProvidersLoading } = useProviders();
     const disabledProviders = ["facebook", "twitter", "apple"];
-
-    useEffect(() => {
-        getProviders()
-            .then((providers) => {
-                setProviders(providers);
-            })
-            .catch((e) => {
-                // console.log("Error while getting providers:", e);
-            });
-        getUser()
-            .then((user) => {
-                setUser(user);
-            })
-            .catch((e) => {
-                // console.log("Error while getting user:", e);
-            });
-    }, []);
 
     function logout() {
         deleteToken();
-        setUser(null);
+        removeUser();
     }
 
     return (
@@ -49,17 +28,20 @@ function App() {
             </div>
             <h1>Auth Server 2.0</h1>
 
-            <div className="user">
-                {!user && <pre>Not logged in</pre>}
-                {user && (
-                    <JsonViewer
-                        value={user}
-                        theme="dark"
-                        displayDataTypes={false}
-                        style={{ padding: "1rem" }}
-                    />
-                )}
-            </div>
+            {!isUserLoading && (
+                <div className="user">
+                    {!user && <pre>Not logged in</pre>}
+                    {user && (
+                        <JsonViewer
+                            value={user}
+                            theme="dark"
+                            displayDataTypes={false}
+                            style={{ padding: "1rem" }}
+                        />
+                    )}
+                </div>
+            )}
+            {isUserLoading && <div>Loading user...</div>}
             <div
                 style={{
                     display: "flex",
@@ -68,19 +50,27 @@ function App() {
                     flexWrap: "wrap"
                 }}
             >
-                {providers.map((provider) => (
-                    <a
-                        key={provider.slug}
-                        className={`button${
-                            disabledProviders.includes(provider.slug)
-                                ? " disabled"
-                                : ""
-                        }`}
-                        href={`http://localhost:3001/auth/${provider.slug}/login`}
-                    >
-                        Login with {provider.name}
-                    </a>
-                ))}
+                {areProvidersLoading && <div>Loading providers...</div>}
+                {providers &&
+                    providers.map((provider) => (
+                        <a
+                            key={provider.slug}
+                            className={`provider-button button${
+                                disabledProviders.includes(provider.slug)
+                                    ? " disabled"
+                                    : ""
+                            }`}
+                            href={`http://localhost:3001/auth/${provider.slug}/login`}
+                        >
+                            <span className="icon">
+                                <img
+                                    src={`https://simpleicons.org/icons/${provider.slug}.svg`}
+                                    alt=""
+                                />
+                            </span>
+                            Login with {provider.name}
+                        </a>
+                    ))}
             </div>
         </div>
     );

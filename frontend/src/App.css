@@ -43,3 +43,17 @@
 .read-the-docs {
     color: #888;
 }
+
+.provider-button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.provider-button .icon {
+    width: 1.5rem;
+    height: 1.5rem;
+    margin-right: 1em;
+    filter: invert(38%) sepia(58%) saturate(3301%) hue-rotate(224deg)
+        brightness(104%) contrast(101%);
+}
