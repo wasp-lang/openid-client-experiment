@@ -131,7 +131,11 @@ async function getUserInfo(
                 nonce: codeChallenge
             }
         );
-        let userInfo = tokenSet.claims();
+        let userInfo = {
+            ...tokenSet,
+            ...tokenSet.claims()
+        };
+        delete userInfo.id_token;
         if (client.issuer.metadata.userinfo_endpoint) {
             const extraUserInfo = await client.userinfo(tokenSet.access_token!);
             userInfo = {
@@ -152,6 +156,19 @@ async function getUserInfo(
                 state: codeChallenge
             }
         );
-        return client.userinfo(tokenSet.access_token!);
+        let userInfo = {
+            ...tokenSet
+        };
+        // Notion has a required header which we can't send with the userinfo request https://developers.notion.com/reference/get-self
+        try {
+            const extraUserInfo = await client.userinfo(tokenSet.access_token!);
+            userInfo = {
+                ...userInfo,
+                ...extraUserInfo
+            };
+        } catch (e: any) {
+            console.warn(e);
+        }
+        return userInfo;
     }
 }

@@ -77,7 +77,7 @@ export function getProviders() {
         clientSecret: process.env.AUTH_LINKEDIN_CLIENT_SECRET,
         scope: "r_liteprofile r_emailaddress",
         aditionalIssuerMetadata: {
-            token_endpoint_auth_methods_supported: "client_secret_post"
+            token_endpoint_auth_methods_supported: ["client_secret_post"]
         }
     });
     registerProvider("apple", {
@@ -88,6 +88,26 @@ export function getProviders() {
         clientSecret: process.env.AUTH_APPLE_CLIENT_SECRET,
         scope: "name email",
         additionalClientParams: { response_mode: "form_post" }
+    });
+    registerProvider("spotify", {
+        type: "oauth2",
+        name: "Spotify",
+        authorizeUrl: "https://accounts.spotify.com/authorize",
+        accessUrl: "https://accounts.spotify.com/api/token",
+        profileUrl: "https://api.spotify.com/v1/me",
+        clientId: process.env.AUTH_SPOTIFY_CLIENT_ID,
+        clientSecret: process.env.AUTH_SPOTIFY_CLIENT_SECRET,
+        scope: "user-read-private user-read-email"
+    });
+    registerProvider("notion", {
+        type: "oauth2",
+        name: "Notion",
+        authorizeUrl: "https://api.notion.com/v1/oauth/authorize",
+        accessUrl: "https://api.notion.com/v1/oauth/token",
+        profileUrl: "https://api.notion.com/v1/users/me",
+        clientId: process.env.AUTH_NOTION_CLIENT_ID,
+        clientSecret: process.env.AUTH_NOTION_CLIENT_SECRET,
+        scope: "basic_read"
     });
 
     return providers;
