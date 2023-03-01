@@ -38,14 +38,24 @@ export function createOAuthRouter<User>({
 
         try {
             const client = await createClient(providerSlug, provider);
-            const authUrl = client.authorizationUrl({
+            const params: {
+                scope: string;
+                access_type: string;
+                code_challenge?: string;
+                code_challenge_method?: string;
+                state: string;
+                nonce: string;
+            } = {
                 scope: provider.scope ?? "openid email profile",
                 access_type: "offline",
-                code_challenge: codeChallenge,
-                code_challenge_method: "S256",
                 state: codeChallenge,
                 nonce: codeChallenge
-            });
+            };
+            if (!provider.disablePKCE) {
+                params.code_challenge = codeChallenge;
+                params.code_challenge_method = "S256";
+            }
+            const authUrl = client.authorizationUrl(params);
 
             setVerifierCookie(res, providerSlug, codeVerifier);
 
@@ -148,13 +158,12 @@ async function getUserInfo(
         return userInfo;
     } else {
         const checks: { state: string; code_verifier?: string } = {
-            state: codeChallenge,
-            code_verifier: verifier
+            state: codeChallenge
         };
 
-        // Some providers require the code verifier field, while some (Linkedin) fail if it's present
-        if (provider.isCodeVerifierFieldForbidden) {
-            delete checks.code_verifier;
+        // We include PKCE checks by default, but some providers fail if included
+        if (!provider.disablePKCE) {
+            checks.code_verifier = verifier;
         }
         const tokenSet = await client.oauthCallback(
             provider.redirectUrl,

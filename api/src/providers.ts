@@ -3,7 +3,7 @@ import { ProviderOIDC, ProviderOAuth2, Provider } from "@wasp-lang/auth";
 export function getProviders() {
     const providers: Map<string, () => Provider> = new Map();
 
-    const clientUrl = "http://localhost:3000";
+    const clientUrl = process.env.CLIENT_URL;
 
     registerProvider("google", {
         type: "oidc",
@@ -78,7 +78,7 @@ export function getProviders() {
         aditionalIssuerMetadata: {
             token_endpoint_auth_methods_supported: ["client_secret_post"]
         },
-        isCodeVerifierFieldForbidden: true
+        disablePKCE: true
     });
     registerProvider("apple", {
         type: "oidc",

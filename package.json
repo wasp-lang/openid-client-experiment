@@ -1,0 +1,26 @@
+{
+  "name": "openid-client-experiment",
+  "version": "1.0.0",
+  "description": "The idea was to use `openid-client` package to cover as many auth providers as possible.",
+  "main": "index.js",
+  "scripts": {
+    "run:api": "npm run dev --prefix api",
+    "run:frontend": "npm run dev --prefix frontend",
+    "run:wasp-auth": "npm run watch --prefix packages/wasp-auth",
+    "run:all": "concurrently -n api,frontend,wasp-auth -c green,cyan,yellow \"npm run run:api\" \"npm run run:frontend\" \"npm run run:wasp-auth\""
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/wasp-lang/openid-client-experiment.git"
+  },
+  "devDependencies": {
+    "concurrently": "^7.6.0"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/wasp-lang/openid-client-experiment/issues"
+  },
+  "homepage": "https://github.com/wasp-lang/openid-client-experiment#readme"
+}

@@ -13,7 +13,6 @@ export type ProviderOAuth2 = {
     profileUrl: string;
     redirectUrl: string;
     aditionalIssuerMetadata?: Record<string, any>;
-    isCodeVerifierFieldForbidden?: boolean;
 } & ProviderCommon;
 
 type ProviderCommon = {
@@ -22,5 +21,6 @@ type ProviderCommon = {
     clientSecret?: string;
     redirectUrl: string;
     scope?: string;
+    disablePKCE?: boolean;
     additionalClientParams?: Record<string, any>;
 };
