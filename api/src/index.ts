@@ -1,7 +1,3 @@
-import dotenv from "dotenv";
-
-dotenv.config();
-
 import express, { Express, NextFunction, Request, Response } from "express";
 import cors from "cors";
 import morgan from "morgan";
@@ -14,6 +10,7 @@ import { createOAuthRouter } from "@wasp-lang/auth";
 import { users } from "./db.js";
 import { makeToken, useJwt } from "./auth.js";
 import { getProviders } from "./providers.js";
+import { env } from "./env.js";
 
 const app: Express = express();
 
@@ -21,7 +18,7 @@ app.use(
     cors({
         credentials: true,
         allowedHeaders: ["Content-Type", "Authorization"],
-        origin: ["http://localhost:3000"]
+        origin: [env.CLIENT_URL]
     })
 );
 app.use(bodyParser.json());
@@ -34,8 +31,6 @@ app.use(function (err: any, req: Request, res: Response, next: NextFunction) {
     }
     next();
 });
-
-const port = process.env.PORT;
 
 app.get("/", (req: Request, res: Response) => {
     res.send("Auth server 2.0");
@@ -73,6 +68,6 @@ app.use(
     })
 );
 
-app.listen(port, () => {
-    console.log(`⚡️[server]: Server is running at http://localhost:${port}`);
+app.listen(env.PORT, () => {
+    console.log(`⚡️[server]: Server is running at port ${env.PORT}`);
 });

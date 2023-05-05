@@ -1,8 +1,9 @@
 import Ky from "ky";
 import { deleteToken, getToken } from "../auth";
+import { env } from "../env";
 
 const api = Ky.create({
-    prefixUrl: "http://localhost:3001",
+    prefixUrl: env.VITE_SERVER_URL,
     credentials: "include",
     hooks: {
         beforeRequest: [

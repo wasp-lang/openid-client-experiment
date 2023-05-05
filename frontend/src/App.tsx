@@ -3,6 +3,7 @@ import "./App.css";
 import { deleteToken } from "./auth";
 import { JsonViewer } from "@textea/json-viewer";
 import { useUser, removeUser, useProviders } from "./auth/hooks";
+import { env } from "./env";
 
 function App() {
     const { user, isLoading: isUserLoading } = useUser();
@@ -60,7 +61,7 @@ function App() {
                                     ? " disabled"
                                     : ""
                             }`}
-                            href={`http://localhost:3001/auth/${provider.slug}/login`}
+                            href={`${env.VITE_SERVER_URL}/auth/${provider.slug}/login`}
                         >
                             <span className="icon">
                                 <img

@@ -72,7 +72,7 @@ export function createOAuthRouter<User>({
         const providerSlug = req.params.provider;
         const getProvider = providers.get(providerSlug);
         if (!getProvider) {
-            res.status(404).json({ error: "Provider not found" });
+            res.status(400).json({ error: "Provider not found" });
             return;
         }
 
